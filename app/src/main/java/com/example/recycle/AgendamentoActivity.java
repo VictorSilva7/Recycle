@@ -1,205 +1,111 @@
-package com.example.recycle;
+package com.example.recyclebit;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
-import android.view.View;
+import android.view.MenuItem;
+import android.view.View; // NOVO: Necessário para o OnClickListener
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import com.google.android.material.chip.Chip;
-import com.google.android.material.chip.ChipGroup;
-import com.google.android.material.textfield.TextInputEditText;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.ArrayList;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import java.util.Calendar;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.Locale; // NOVO: Necessário para formatação de data DD/MM/AAAA
 
-public class AgendamentoActivity extends AppCompatActivity {
+public class AgendarDescarteActivity extends AppCompatActivity {
 
-    // VARIÁVEIS DE INSTÂNCIA
-    private Toolbar toolbar;
-    private TextView tvToolbarUserName;
-    private TextInputEditText etData;
-    private TextInputEditText etAgendamentoEmail;
-
+    private EditText etData;
     private Spinner spinnerColeta, spinnerHora;
-    private ChipGroup chipGroupMateriais;
-    private TextInputEditText etAgendamentoTelefone, etObservacoes;
     private Button btnAgendar, btnCancelar;
-
-    // DADOS FIREBASE
-    private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
-    private String currentUserName;
-    private String currentUserEmail;
+    private Calendar calendar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agendamento);
+        setContentView(R.layout.activity_agendar_descarte);
 
-        mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
+        // 1. Configurar Toolbar
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
 
-        initializeUI();
-        getUserDataFromIntent();
-        setupToolbar();
-        setupListeners();
-    }
-
-    private void initializeUI() {
-        // INICIALIZAÇÃO DE TODAS AS VIEWS
-        toolbar = findViewById(R.id.toolbar_agendamento);
-        tvToolbarUserName = findViewById(R.id.tv_toolbar_user_name);
+        // 2. Inicializar Componentes de UI
         etData = findViewById(R.id.et_data);
-        etAgendamentoEmail = findViewById(R.id.et_agendamento_email);
-        etAgendamentoTelefone = findViewById(R.id.et_agendamento_telefone);
-        etObservacoes = findViewById(R.id.et_observacoes);
-        spinnerColeta = findViewById(R.id.spinner_coleta);
+        spinnerColeta = findViewById(R.id.spinner_ponto_coleta);
         spinnerHora = findViewById(R.id.spinner_hora);
-        chipGroupMateriais = findViewById(R.id.chip_group_materiais);
         btnAgendar = findViewById(R.id.btn_agendar);
-        btnCancelar = findViewById(R.id.btn_cancelar_agendamento);
-    }
+        btnCancelar = findViewById(R.id.btn_cancelar);
+        calendar = Calendar.getInstance();
 
-    private void getUserDataFromIntent() {
-        currentUserName = getIntent().getStringExtra("USER_NAME");
-        currentUserEmail = getIntent().getStringExtra("USER_EMAIL");
-
-        if (tvToolbarUserName != null && currentUserName != null) {
-            tvToolbarUserName.setText(currentUserName);
-        }
-
-        if (etAgendamentoEmail != null && currentUserEmail != null) {
-            etAgendamentoEmail.setText(currentUserEmail);
-        } else if (etAgendamentoEmail != null && mAuth.getCurrentUser() != null) {
-            currentUserEmail = mAuth.getCurrentUser().getEmail();
-            etAgendamentoEmail.setText(currentUserEmail);
-        }
-    }
-
-    private void setupToolbar() {
-        if (toolbar != null) {
-            setSupportActionBar(toolbar);
-            if (getSupportActionBar() != null) {
-                getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // 3. Configurar Clique no Campo de Data (DatePicker)
+        // CORREÇÃO: Usando a sintaxe de View.OnClickListener para maior robustez
+        etData.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mostrarDatePickerDialog();
             }
-            toolbar.setNavigationOnClickListener(v -> finish());
-        }
+        });
+
+        // 4. Configurar Botões de Ação
+        btnAgendar.setOnClickListener(v -> agendarDescarte());
+        btnCancelar.setOnClickListener(v -> finish());
     }
 
-    private void setupListeners() {
-        if (etData != null) {
-            etData.setOnClickListener(v -> showDatePickerDialog());
-        }
-        if (btnAgendar != null) {
-            btnAgendar.setOnClickListener(v -> saveScheduling());
-        }
-        if (btnCancelar != null) {
-            btnCancelar.setOnClickListener(v -> finish());
-        }
-    }
+    private void mostrarDatePickerDialog() {
+        int ano = calendar.get(Calendar.YEAR);
+        int mes = calendar.get(Calendar.MONTH);
+        int dia = calendar.get(Calendar.DAY_OF_MONTH);
 
-    private void showDatePickerDialog() {
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        // CORREÇÃO: Usando AgendarDescarteActivity.this para garantir o contexto
+        DatePickerDialog datePickerDialog = new DatePickerDialog(
+                AgendarDescarteActivity.this,
+                (view, year, monthOfYear, dayOfMonth) -> {
+                    // CORREÇÃO: Formatação para DD/MM/AAAA usando Locale e String.format
+                    String dataSelecionada = String.format(
+                            Locale.getDefault(),
+                            "%02d/%02d/%d",
+                            dayOfMonth,
+                            monthOfYear + 1, // Mês é base zero, então somamos 1
+                            year
+                    );
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String date = String.format(Locale.getDefault(), "%02d/%02d/%d",
-                            selectedDay, selectedMonth + 1, selectedYear);
-                    etData.setText(date);
-                }, year, month, day);
+                    etData.setText(dataSelecionada);
+                    // Opcional: Atualiza o objeto Calendar
+                    calendar.set(year, monthOfYear, dayOfMonth);
+                }, ano, mes, dia);
 
-        datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis() - 1000);
         datePickerDialog.show();
     }
 
-    private void saveScheduling() {
-        FirebaseUser currentUser = mAuth.getCurrentUser();
+    private void agendarDescarte() {
+        String ponto = spinnerColeta.getSelectedItem().toString();
+        String data = etData.getText().toString();
+        String hora = spinnerHora.getSelectedItem().toString();
 
-        // 1. VERIFICAÇÃO DE AUTENTICAÇÃO
-        if (currentUser == null) {
-            Toast.makeText(this, "Erro: Usuário não autenticado. Faça login novamente.", Toast.LENGTH_LONG).show();
+        if (data.isEmpty() || ponto.contains("Selecione") || hora.contains("Selecione")) {
+            Toast.makeText(this, "Preencha a Data, Hora e Ponto de Coleta.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        // Obtém dados de forma segura
-        String pontoColeta = spinnerColeta != null && spinnerColeta.getSelectedItem() != null ?
-                spinnerColeta.getSelectedItem().toString() : "";
-        String data = etData != null ? etData.getText().toString() : "";
-        String hora = spinnerHora != null && spinnerHora.getSelectedItem() != null ?
-                spinnerHora.getSelectedItem().toString() : "";
-
-        String telefone = etAgendamentoTelefone != null ? etAgendamentoTelefone.getText().toString().trim() : "";
-        String observacoes = etObservacoes != null ? etObservacoes.getText().toString().trim() : "";
-
-        List<String> materiaisSelecionados = getSelectedMaterials();
-
-        // 2. VALIDAÇÃO BÁSICA
-        if (spinnerColeta == null || spinnerColeta.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Por favor, selecione um ponto de coleta válido.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (data.isEmpty() || hora.equals("Selecione o horário")) {
-            Toast.makeText(this, "Data e hora são obrigatórias.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (materiaisSelecionados.isEmpty()) {
-            Toast.makeText(this, "Selecione pelo menos um tipo de material.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // 3. PREPARA OS DADOS
-        Map<String, Object> agendamento = new HashMap<>();
-        agendamento.put("userId", currentUser.getUid());
-        agendamento.put("userEmail", currentUserEmail);
-        agendamento.put("userName", currentUserName);
-        agendamento.put("pontoColeta", pontoColeta);
-        agendamento.put("dataAgendamento", data);
-        agendamento.put("horaAgendamento", hora);
-        agendamento.put("materiais", materiaisSelecionados);
-        agendamento.put("telefone", telefone);
-        agendamento.put("observacoes", observacoes);
-        agendamento.put("status", "Pendente");
-
-        // 4. SALVA NO FIRESTORE
-        db.collection("agendamentos")
-                .add(agendamento)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(AgendamentoActivity.this, "Agendamento realizado com sucesso!", Toast.LENGTH_LONG).show();
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(AgendamentoActivity.this, "Erro ao agendar: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+        Toast.makeText(this, "Descarte agendado para " + data + " às " + hora, Toast.LENGTH_LONG).show();
     }
 
-    private List<String> getSelectedMaterials() {
-        List<String> selected = new ArrayList<>();
-        if (chipGroupMateriais != null) {
-            for (int i = 0; i < chipGroupMateriais.getChildCount(); i++) {
-                View child = chipGroupMateriais.getChildAt(i);
-                if (child instanceof Chip) {
-                    Chip chip = (Chip) child;
-                    if (chip.isChecked()) {
-                        selected.add(chip.getText().toString());
-                    }
-                }
-            }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.action_logout) {
+            Toast.makeText(this, "Fazendo logout...", Toast.LENGTH_SHORT).show();
+            return true;
         }
-        return selected;
+        return super.onOptionsItemSelected(item);
     }
 }
