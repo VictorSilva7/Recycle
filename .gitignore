@@ -13,3 +13,16 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# O arquivo local.properties contém a localização do SDK e deve ser ignorado
+/local.properties
+
+# O arquivo .gradle/ é ignorado por padrão
+/.gradle/
+
+# Arquivos que podem conter variáveis de ambiente ou segredos
+# É um bom lugar para guardar chaves específicas do seu app (como uma chave do Google Maps)
+/gradle.properties
+
+# Arquivo de configuração do Firebase (CONTÉM A CHAVE DE API DO FIREBASE)
+/app/google-services.json

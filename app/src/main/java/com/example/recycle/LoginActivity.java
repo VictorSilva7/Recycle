@@ -1,48 +1,52 @@
-package com.example.recycle; // ATENÇÃO: Verifique se este é o nome correto do seu pacote!
+package com.example.recycle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
 
 public class LoginActivity extends AppCompatActivity {
 
     private TextInputEditText etEmail;
     private TextInputEditText etPassword;
     private Button btnLogin;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Oculta a Action Bar padrão se estiver presente
+        mAuth = FirebaseAuth.getInstance();
+
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        // 1. Inicializa os elementos da UI (deve corresponder aos IDs do XML)
+        // Se o usuário já estiver logado, navegue diretamente
+        // Este código não estava na versão anterior, mas é uma boa prática
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser != null) {
+            navigateToHome(currentUser.getEmail());
+            return;
+        }
+
         etEmail = findViewById(R.id.et_email);
         etPassword = findViewById(R.id.et_password);
         btnLogin = findViewById(R.id.btn_login);
 
-        // 2. Define o listener de clique para o botão de Login
-        btnLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                performLogin();
-            }
-        });
+        btnLogin.setOnClickListener(v -> performLogin());
     }
 
-    /**
-     * Realiza a lógica de validação de login e navegação.
-     */
     private void performLogin() {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
@@ -52,25 +56,34 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Lógica simples de validação (apenas para teste)
-        if (email.equals("teste@email.com") && password.equals("123456")) {
-            // Login bem-sucedido
-            Toast.makeText(this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            Toast.makeText(LoginActivity.this, "Login efetuado com sucesso!", Toast.LENGTH_SHORT).show();
+                            navigateToHome(user.getEmail());
+                        } else {
+                            Toast.makeText(LoginActivity.this,
+                                    "Falha na autenticação: " + task.getException().getMessage(),
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
 
-            // Cria a intenção de ir para HomeActivity
-            Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
+    private void navigateToHome(String userIdentifier) {
+        // Usaremos a primeira parte do email como nome provisório
+        String userName = userIdentifier.split("@")[0];
 
-            // ENVIANDO O NOME DE TESTE "Trump" PARA A PRÓXIMA TELA
-            homeIntent.putExtra("USER_NAME", "Trump");
+        Intent homeIntent = new Intent(LoginActivity.this, HomeActivity.class);
 
-            // Inicia a nova Activity
-            startActivity(homeIntent);
+        // Passando o nome de teste "Trump" para o requisito anterior
+        homeIntent.putExtra("USER_NAME", "Trump");
+        homeIntent.putExtra("USER_EMAIL", userIdentifier);
 
-            // Finaliza a LoginActivity para que o usuário não possa voltar
-            finish();
-        } else {
-            // Credenciais inválidas
-            Toast.makeText(this, "Credenciais inválidas. Tente novamente.", Toast.LENGTH_SHORT).show();
-        }
+        startActivity(homeIntent);
+        finish();
     }
 }

@@ -1,3 +1,18 @@
 <resources>
     <string name="app_name">Recycle</string>
+
+    <string-array name="pontos_coleta_array">
+        <item>EcoTech Reciclagem</item>
+        <item>Ponto Central</item>
+        <item>Unidade Sul</item>
+    </string-array>
+
+    <string-array name="horarios_array">
+        <item>Selecione o horário</item>
+        <item>09:00 - 10:00</item>
+        <item>10:00 - 11:00</item>
+        <item>11:00 - 12:00</item>
+        <item>14:00 - 15:00</item>
+        <item>15:00 - 16:00</item>
+    </string-array>
 </resources>

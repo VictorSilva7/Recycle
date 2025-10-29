@@ -5,60 +5,86 @@ import androidx.cardview.widget.CardView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ImageView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class HomeActivity extends AppCompatActivity {
 
     private CardView cardSchedule;
     private CardView cardMySchedules;
-    private ImageView ivLogout;
+    private TextView tvUserName;
     private TextView tvGreeting;
-    private TextView tvUserNameToolbar; // NOVO: Para o nome na Toolbar
+
+    // Instância do Firebase Auth
+    private FirebaseAuth mAuth;
+
+    // Variáveis para armazenar dados do usuário REAL
+    private String userEmail;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
+        mAuth = FirebaseAuth.getInstance();
+
+        // Oculta a barra de título padrão se estiver usando a customizada no XML
         if (getSupportActionBar() != null) {
             getSupportActionBar().hide();
         }
 
-        // Inicializa elementos da UI
+        initializeUI();
+        loadUserData();
+        setupListeners();
+    }
+
+    private void initializeUI() {
         cardSchedule = findViewById(R.id.card_schedule);
         cardMySchedules = findViewById(R.id.card_my_schedules);
-        ivLogout = findViewById(R.id.iv_logout);
-
-        // Inicializa os TextViews
+        tvUserName = findViewById(R.id.tv_user_name);
         tvGreeting = findViewById(R.id.tv_greeting);
-        tvUserNameToolbar = findViewById(R.id.tv_user_name); // Mapeia o TextView da Toolbar
+        // Não é necessário inicializar o ivLogout novamente aqui, pois ele será acessado no Listener
+    }
 
-        // NOVO: Recuperar o nome do usuário do LoginActivity
-        Intent intent = getIntent();
-        String userName = intent.getStringExtra("USER_NAME");
+    private void loadUserData() {
+        FirebaseUser currentUser = mAuth.getCurrentUser();
 
-        // Atualiza os textos se o nome foi passado
-        if (userName != null && !userName.isEmpty()) {
-            // 1. Atualiza a saudação principal
-            tvGreeting.setText("Bem-vindo, " + userName + " !");
-
-            // 2. Atualiza o nome na Toolbar
-            tvUserNameToolbar.setText(userName);
+        // Pega o email do Firebase se o usuário estiver logado
+        if (currentUser != null) {
+            userEmail = currentUser.getEmail();
+            // Pega o nome do Intent (que vem do Login) ou usa a primeira parte do email
+            userName = getIntent().getStringExtra("USER_NAME");
+            if (userName == null || userName.isEmpty()) {
+                userName = userEmail.split("@")[0];
+            }
         } else {
-            // Caso não receba o nome, usa um nome padrão
-            tvGreeting.setText("Bem-vindo(a)!");
-            tvUserNameToolbar.setText("Usuário");
+            // Deve ser impossível se o Login funcionar, mas garante um fallback
+            userName = "Usuário";
+            userEmail = "";
         }
 
+        // Atualiza a UI
+        tvUserName.setText(userName);
+        tvGreeting.setText("Bem-vindo, " + userName + " !");
+    }
 
-        // Lógica de Clique: Agendar Descarte
+    private void setupListeners() {
+        // Lógica de Clique: Agendar Descarte (Navegação CORRIGIDA)
         cardSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Navegar para a tela de Agendamento (próxima tela)
-                Toast.makeText(HomeActivity.this, "Indo para Agendar Descarte...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(HomeActivity.this, "Abrindo Agendar Descarte...", Toast.LENGTH_SHORT).show();
+
+                Intent intent = new Intent(HomeActivity.this, AgendamentoActivity.class);
+                // Passa o nome e o email REAL do usuário
+                intent.putExtra("USER_NAME", userName);
+                intent.putExtra("USER_EMAIL", userEmail);
+                startActivity(intent);
             }
         });
 
@@ -66,20 +92,24 @@ public class HomeActivity extends AppCompatActivity {
         cardMySchedules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO: Navegar para a tela de Meus Agendamentos
                 Toast.makeText(HomeActivity.this, "Indo para Meus Agendamentos...", Toast.LENGTH_SHORT).show();
+                // TODO: Navegar para a Meus Agendamentos Activity
             }
         });
 
         // Lógica de Clique: Logout
+        ImageView ivLogout = findViewById(R.id.iv_logout);
         ivLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                mAuth.signOut(); // Desloga o usuário do Firebase
+
                 // Volta para a tela de Login
                 Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                // Estas flags impedem o usuário de voltar para a Home usando o botão "Voltar"
                 loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(loginIntent);
-                finish();
+                finish(); // Finaliza a HomeActivity
             }
         });
     }

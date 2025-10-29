@@ -13,7 +13,7 @@
         android:theme="@style/Theme.Recycle">
 
         <activity
-            android:name=".LoginActivity"
+            android:name="com.example.recycle.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,7 +21,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".HomeActivity" />
+        <activity android:name="com.example.recycle.AgendamentoActivity" />
+
+        <activity android:name="com.example.recycle.HomeActivity" />
 
     </application>
 </manifest>
