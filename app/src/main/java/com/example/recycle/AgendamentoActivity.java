@@ -14,7 +14,7 @@ import androidx.appcompat.widget.Toolbar;
 import java.util.Calendar;
 import java.util.Locale; // NOVO: Necessário para formatação de data DD/MM/AAAA
 
-public class AgendarDescarteActivity extends AppCompatActivity {
+public class AgendamentoActivity extends AppCompatActivity {
 
     private EditText etData;
     private Spinner spinnerColeta, spinnerHora;
@@ -24,7 +24,7 @@ public class AgendarDescarteActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_agendar_descarte);
+        setContentView(R.layout.activity_agendamento);
 
         // 1. Configurar Toolbar
         Toolbar toolbar = findViewById(R.id.toolbar);

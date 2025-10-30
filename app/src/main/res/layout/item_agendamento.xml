@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginTop="16dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="2dp">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="16dp">
+
+        <TextView
+            android:id="@+id/tv_item_titulo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@android:color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="EcoTech Reciclagem" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_item_tag"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="#1"
+            android:textSize="12sp"
+            app:chipBackgroundColor="#E0F2F1"
+            app:chipStrokeWidth="0dp"
+            app:chipMinTouchTargetSize="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/tv_item_data_hora"/>
+
+        <ImageView
+            android:id="@+id/icon_item_data"
+            android:layout_width="14dp"
+            android:layout_height="14dp"
+            android:layout_marginTop="8dp"
+            android:src="@drawable/ic_calendar"
+            app:tint="#666666"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_titulo" />
+
+        <TextView
+            android:id="@+id/tv_item_data_hora"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="@id/icon_item_data"
+            app:layout_constraintStart_toEndOf="@id/icon_item_data"
+            app:layout_constraintTop_toTopOf="@id/icon_item_data"
+            tools:text="23/09/2025 09:00" />
+
+        <TextView
+            android:id="@+id/tv_item_materiais_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Materiais:"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/icon_item_data" />
+
+        <TextView
+            android:id="@+id/tv_item_materiais"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:textColor="#666666"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/tv_item_materiais_label"
+            app:layout_constraintTop_toTopOf="@id/tv_item_materiais_label"
+            tools:text="Eletrônicos, Computadores" />
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:scrollbars="none"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_materiais">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_item_detalhes"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Detalhes"
+                    android:layout_marginEnd="8dp"
+                    app:icon="@drawable/ic_details"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_item_pdf"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="PDF"
+                    android:layout_marginEnd="8dp"
+                    app:icon="@drawable/ic_pdf_download"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_item_editar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Editar"
+                    android:layout_marginEnd="8dp"
+                    android:backgroundTint="#2196F3"
+                    app:icon="@drawable/ic_edit"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btn_item_cancelar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#F44336"
+                    android:text="Cancelar"
+                    app:icon="@drawable/ic_cancel"
+                    app:iconGravity="textStart"
+                    app:iconPadding="4dp" />
+            </LinearLayout>
+        </HorizontalScrollView>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>

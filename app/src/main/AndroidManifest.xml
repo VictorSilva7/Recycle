@@ -24,6 +24,7 @@
         <activity android:name="com.example.recycle.AgendamentoActivity" />
 
         <activity android:name="com.example.recycle.HomeActivity" />
+        <activity android:name=".MeusAgendamentosActivity" />
 
     </application>
 </manifest>

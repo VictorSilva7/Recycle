@@ -112,5 +112,17 @@ public class HomeActivity extends AppCompatActivity {
                 finish(); // Finaliza a HomeActivity
             }
         });
+
+        // Lógica de Clique: Meus Agendamentos (AGORA NAVEGA!!! finalmente)
+        cardMySchedules.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, MeusAgendamentosActivity.class);
+                // Passa os dados do usuário para a próxima tela também
+                intent.putExtra("USER_NAME", userName);
+                intent.putExtra("USER_EMAIL", userEmail);
+                startActivity(intent);
+            }
+        });
     }
 }
