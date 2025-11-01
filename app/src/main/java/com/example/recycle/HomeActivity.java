@@ -80,7 +80,7 @@ public class HomeActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Toast.makeText(HomeActivity.this, "Abrindo Agendar Descarte...", Toast.LENGTH_SHORT).show();
 
-                Intent intent = new Intent(HomeActivity.this, AgendamentoActivity.class);
+                Intent intent = new Intent(HomeActivity.this, AgendamentoActivity.java);
                 // Passa o nome e o email REAL do usuário
                 intent.putExtra("USER_NAME", userName);
                 intent.putExtra("USER_EMAIL", userEmail);

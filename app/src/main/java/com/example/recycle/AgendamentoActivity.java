@@ -1,4 +1,4 @@
-package com.example.recyclebit; // PACOTE ATUALIZADO
+package com.example.recycle;// PACOTE ATUALIZADO
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -70,7 +70,7 @@ public class AgendamentoActivity extends AppCompatActivity {
         spinnerHora = findViewById(R.id.spinner_hora);
         chipGroupMateriais = findViewById(R.id.chip_group_materiais);
         btnAgendar = findViewById(R.id.btn_agendar);
-        btnCancelar = findViewById(R.id.btn_cancelar_agendamento); // ID CORRIGIDO
+        btnCancelar = findViewById(R.id.btn_cancelar_agendamento);
     }
 
     // ===============================================
