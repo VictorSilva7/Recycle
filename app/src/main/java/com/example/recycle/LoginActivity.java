@@ -32,8 +32,6 @@ public class LoginActivity extends AppCompatActivity {
             getSupportActionBar().hide();
         }
 
-        // Se o usuário já estiver logado, navegue diretamente
-        // Este código não estava na versão anterior, mas é uma boa prática
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
             navigateToHome(currentUser.getEmail());
