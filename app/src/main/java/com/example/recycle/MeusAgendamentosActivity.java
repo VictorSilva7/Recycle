@@ -62,7 +62,8 @@ public class MeusAgendamentosActivity extends AppCompatActivity {
         }
         toolbar.setNavigationOnClickListener(v -> finish());
 
-        // Pega o nome do usuário do Intent e exibe na Toolbar
+        // Lógica de 'tv_toolbar_user_name' REMOVIDA
+        /*
         String userName = getIntent().getStringExtra("USER_NAME");
         if (userName != null) {
             TextView tvUser = findViewById(R.id.tv_toolbar_user_name);
@@ -70,6 +71,7 @@ public class MeusAgendamentosActivity extends AppCompatActivity {
                 tvUser.setText(userName);
             }
         }
+        */
     }
 
     // Define os DatePickers para os filtros
@@ -99,19 +101,19 @@ public class MeusAgendamentosActivity extends AppCompatActivity {
         agendamentoList.add(new Agendamento(
                 "EcoTech Reciclagem",
                 "#1",
-                "23/09/2025 09:00",
+                "23/11/2025 09:00",
                 "Eletrônicos, Computadores"
         ));
         agendamentoList.add(new Agendamento(
                 "Recicla Bem",
                 "#2",
-                "28/09/2025 14:00",
+                "28/11/2025 14:00",
                 "Eletrônicos, Celulares"
         ));
         agendamentoList.add(new Agendamento(
                 "Descarte Certo",
                 "#3",
-                "13/09/2025 11:00",
+                "13/11/2025 11:00",
                 "Eletrônicos, Pilhas"
         ));
     }

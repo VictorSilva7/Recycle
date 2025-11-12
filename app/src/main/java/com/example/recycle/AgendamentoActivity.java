@@ -1,4 +1,4 @@
-package com.example.recycle;// PACOTE ATUALIZADO
+package com.example.recycle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+// import android.widget.ImageView; // Não é mais necessário
 
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
@@ -28,7 +29,7 @@ public class AgendamentoActivity extends AppCompatActivity {
 
     // VARIÁVEIS DE INSTÂNCIA
     private Toolbar toolbar;
-    private TextView tvToolbarUserName;
+    // private TextView tvToolbarUserName; // REMOVIDO
     private TextInputEditText etData;
     private TextInputEditText etAgendamentoEmail;
 
@@ -46,7 +47,6 @@ public class AgendamentoActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Garante que o layout correto (activity_agendamento) seja carregado
         setContentView(R.layout.activity_agendamento);
 
         mAuth = FirebaseAuth.getInstance();
@@ -59,9 +59,8 @@ public class AgendamentoActivity extends AppCompatActivity {
     }
 
     private void initializeUI() {
-        // IDs CORRETOS (baseado no seu XML)
         toolbar = findViewById(R.id.toolbar_agendamento);
-        tvToolbarUserName = findViewById(R.id.tv_toolbar_user_name);
+        // tvToolbarUserName = findViewById(R.id.tv_toolbar_user_name); // REMOVIDO
         etData = findViewById(R.id.et_data);
         etAgendamentoEmail = findViewById(R.id.et_agendamento_email);
         etAgendamentoTelefone = findViewById(R.id.et_agendamento_telefone);
@@ -74,16 +73,14 @@ public class AgendamentoActivity extends AppCompatActivity {
     }
 
     // ===============================================
-    // DADOS E TOOLBAR (Com verificações de nulo)
+    // DADOS E TOOLBAR
     // ===============================================
 
     private void getUserDataFromIntent() {
         currentUserName = getIntent().getStringExtra("USER_NAME");
         currentUserEmail = getIntent().getStringExtra("USER_EMAIL");
 
-        if (tvToolbarUserName != null && currentUserName != null) {
-            tvToolbarUserName.setText(currentUserName);
-        }
+        // Lógica de 'tvToolbarUserName' REMOVIDA
 
         if (etAgendamentoEmail != null && currentUserEmail != null) {
             etAgendamentoEmail.setText(currentUserEmail);
@@ -94,7 +91,7 @@ public class AgendamentoActivity extends AppCompatActivity {
     }
 
     private void setupToolbar() {
-        if (toolbar != null) { // Verificação de nulo para evitar crash
+        if (toolbar != null) {
             setSupportActionBar(toolbar);
             if (getSupportActionBar() != null) {
                 getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -104,6 +101,7 @@ public class AgendamentoActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
+        // Listeners dos campos de data e botões (mantidos)
         if (etData != null) {
             etData.setOnClickListener(v -> showDatePickerDialog());
         }
@@ -113,6 +111,8 @@ public class AgendamentoActivity extends AppCompatActivity {
         if (btnCancelar != null) {
             btnCancelar.setOnClickListener(v -> finish());
         }
+
+        // Listener de Logout (REMOVIDO, pois o 'iv_logout_agendamento' foi removido do XML)
     }
 
     private void showDatePickerDialog() {
@@ -121,7 +121,6 @@ public class AgendamentoActivity extends AppCompatActivity {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        // CORREÇÃO: Contexto deve ser 'AgendamentoActivity.this'
         DatePickerDialog datePickerDialog = new DatePickerDialog(AgendamentoActivity.this,
                 (view, selectedYear, selectedMonth, selectedDay) -> {
                     String date = String.format(Locale.getDefault(), "%02d/%02d/%d",
@@ -134,7 +133,7 @@ public class AgendamentoActivity extends AppCompatActivity {
     }
 
     // ===============================================
-    // LÓGICA DE SALVAMENTO (FIRESTORE) - (Restaurada)
+    // LÓGICA DE SALVAMENTO (FIRESTORE) - (Mantida)
     // ===============================================
 
     private void saveScheduling() {

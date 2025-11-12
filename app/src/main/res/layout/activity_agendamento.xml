@@ -28,42 +28,6 @@
             android:textStyle="bold"
             android:layout_gravity="start" />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center_vertical|end"
-            android:layout_gravity="end"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_person"
-                app:tint="@android:color/white"
-                android:contentDescription="Ícone de Usuário" />
-
-            <TextView
-                android:id="@+id/tv_toolbar_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                tools:text="João"
-                android:textColor="@android:color/white"
-                android:textSize="16sp"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="12dp"/>
-
-            <ImageView
-                android:id="@+id/iv_logout_agendamento"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_logout"
-                app:tint="@android:color/white"
-                android:clickable="true"
-                android:focusable="true"
-                android:contentDescription="Sair/Logout" />
-        </LinearLayout>
-
     </androidx.appcompat.widget.Toolbar>
 
     <ScrollView
@@ -86,6 +50,7 @@
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp"/>
+
             <Spinner
                 android:id="@+id/spinner_coleta"
                 android:layout_width="match_parent"
@@ -97,7 +62,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Data e Hora *"
+                android:text="Data e Hora*"
                 android:textColor="@android:color/black"
                 android:textStyle="bold"
                 android:layout_marginBottom="4dp"/>
@@ -118,7 +83,7 @@
                         android:id="@+id/et_data"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:hint="mm/dd/yyyy"
+                        android:hint="dd/mm/yyyy"
                         android:focusable="false"
                         android:clickable="true"
                         android:inputType="none"
@@ -187,13 +152,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Telefone"
-                android:layout_marginBottom="16dp"
+                app:placeholderText="(00) 00000-0000"  android:layout_marginBottom="16dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/et_agendamento_telefone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="(00) 00000-0000"
                     android:inputType="phone"
                     android:textColor="@android:color/black"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -202,6 +166,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Observações"
+                app:placeholderText="Informações adicionais sobre o descarte..."
                 android:layout_marginBottom="32dp"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -211,7 +176,6 @@
                     android:minLines="3"
                     android:maxLines="5"
                     android:gravity="top"
-                    android:hint="Informações adicionais sobre o descarte..."
                     android:inputType="textMultiLine"
                     android:textColor="@android:color/black"/>
             </com.google.android.material.textfield.TextInputLayout>

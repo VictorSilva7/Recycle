@@ -37,8 +37,7 @@
             app:chipStrokeWidth="0dp"
             app:chipMinTouchTargetSize="0dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/tv_item_data_hora"/>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/icon_item_data"
@@ -85,62 +84,60 @@
             app:layout_constraintTop_toTopOf="@id/tv_item_materiais_label"
             tools:text="Eletrônicos, Computadores" />
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_item_detalhes"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Detalhes"
+            app:icon="@drawable/ic_details"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_item_pdf"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PDF"
+            app:icon="@drawable/ic_pdf_download"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_item_editar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Editar"
+            android:backgroundTint="#2196F3"
+            app:icon="@drawable/ic_edit"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btn_item_cancelar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancelar"
+            android:backgroundTint="#F44336"
+            app:icon="@drawable/ic_cancel"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"/>
+
+        <androidx.constraintlayout.helper.widget.Flow
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:scrollbars="none"
-            app:layout_constraintTop_toBottomOf="@id/tv_item_materiais">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_item_materiais"
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+            app:flow_wrapMode="chain"
+            app:flow_horizontalGap="8dp"
+            app:flow_verticalGap="8dp"
 
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_item_detalhes"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Detalhes"
-                    android:layout_marginEnd="8dp"
-                    app:icon="@drawable/ic_details"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_item_pdf"
-                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="PDF"
-                    android:layout_marginEnd="8dp"
-                    app:icon="@drawable/ic_pdf_download"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_item_editar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Editar"
-                    android:layout_marginEnd="8dp"
-                    android:backgroundTint="#2196F3"
-                    app:icon="@drawable/ic_edit"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp"/>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_item_cancelar"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:backgroundTint="#F44336"
-                    android:text="Cancelar"
-                    app:icon="@drawable/ic_cancel"
-                    app:iconGravity="textStart"
-                    app:iconPadding="4dp" />
-            </LinearLayout>
-        </HorizontalScrollView>
+            app:constraint_referenced_ids="btn_item_detalhes,btn_item_pdf,btn_item_editar,btn_item_cancelar"
+            />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

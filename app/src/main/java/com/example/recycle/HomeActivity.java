@@ -48,7 +48,6 @@ public class HomeActivity extends AppCompatActivity {
         cardMySchedules = findViewById(R.id.card_my_schedules);
         tvUserName = findViewById(R.id.tv_user_name);
         tvGreeting = findViewById(R.id.tv_greeting);
-        // Não é necessário inicializar o ivLogout novamente aqui, pois ele será acessado no Listener
     }
 
     private void loadUserData() {
@@ -60,10 +59,11 @@ public class HomeActivity extends AppCompatActivity {
             // Pega o nome do Intent (que vem do Login) ou usa a primeira parte do email
             userName = getIntent().getStringExtra("USER_NAME");
             if (userName == null || userName.isEmpty()) {
+                // Se o nome não veio (ex: usuário já estava logado), usa o email
                 userName = userEmail.split("@")[0];
             }
         } else {
-            // Deve ser impossível se o Login funcionar, mas garante um fallback
+            // Fallback (não deve acontecer se o login funcionar)
             userName = "Usuário";
             userEmail = "";
         }
@@ -74,7 +74,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void setupListeners() {
-        // Lógica de Clique: Agendar Descarte (Navegação CORRIGIDA)
+        // Lógica de Clique: Agendar Descarte
         cardSchedule.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,32 +88,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        // Lógica de Clique: Meus Agendamentos
-        cardMySchedules.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(HomeActivity.this, "Indo para Meus Agendamentos...", Toast.LENGTH_SHORT).show();
-                // TODO: Navegar para a Meus Agendamentos Activity
-            }
-        });
-
-        // Lógica de Clique: Logout
-        ImageView ivLogout = findViewById(R.id.iv_logout);
-        ivLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mAuth.signOut(); // Desloga o usuário do Firebase
-
-                // Volta para a tela de Login
-                Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
-                // Estas flags impedem o usuário de voltar para a Home usando o botão "Voltar"
-                loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(loginIntent);
-                finish(); // Finaliza a HomeActivity
-            }
-        });
-
-        // Lógica de Clique: Meus Agendamentos (AGORA NAVEGA!!! finalmente)
+        // Lógica de Clique: Meus Agendamentos (Listener duplicado removido)
         cardMySchedules.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,5 +99,38 @@ public class HomeActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // Lógica de Clique: Logout
+        ImageView ivLogout = findViewById(R.id.iv_logout);
+        if (ivLogout != null) { // Verificação de segurança
+            ivLogout.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mAuth.signOut(); // Desloga o usuário do Firebase
+
+                    // Volta para a tela de Login
+                    Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+                    // Estas flags impedem o usuário de voltar para a Home usando o botão "Voltar"
+                    loginIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(loginIntent);
+                    finish(); // Finaliza a HomeActivity
+                }
+            });
+        }
+
+        // bloco novo
+        // Lógica de Clique: Abrir Modal de Perfil
+        if (tvUserName != null) {
+            tvUserName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    // Cria o BottomSheet, passando os dados do usuário
+                    ProfileBottomSheet bottomSheet = ProfileBottomSheet.newInstance(userName, userEmail);
+
+                    // Mostra o BottomSheet
+                    bottomSheet.show(getSupportFragmentManager(), "ProfileBottomSheet");
+                }
+            });
+        }
     }
 }
